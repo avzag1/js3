@@ -7,57 +7,141 @@
     <link rel="shortcut icon" href="#" />
     <title>Домашнее задание - занятие 3</title>
     <script>
-            // 1. Напишите функцию min(a, b, ...), которая возвращает меньшее из чисел.
-            // Не используйте функции библиотеки Math. Количество переданных чисел может быть любым.
-            // Если в функцию будет передано не число, просто проигнорируйте данный аргумент.
-            // Решение:
-          
+      // 1. Напишите функцию min(a, b, ...), которая возвращает меньшее из чисел.
+      // Не используйте функции библиотеки Math. Количество переданных чисел может быть любым.
+      // Если в функцию будет передано не число, просто проигнорируйте данный аргумент.
+      // Решение:
 
-            // 2. Расчет суммы чисел с помощью замыканий
-            // Напишите функцию summa, которая вызывается с помощью двойных круглых скобок: summa(a)(b) = a + b.
-            // Примеры:
-            // summa(10)(5) // Возвращает 15
-            // summa(8)(-5) // Возвращает 3
+      let min = (...numbers) => {
+        let numeric = numbers.filter((num) => typeof num === "number");
+        if (numeric.length === 0) {
+          return null;
+        }
+        return numeric.reduce(
+          (acc, num) => (num < acc ? num : acc),
+          numeric[0]
+        );
+        console.log(`"Минимальное значение: " (min)`);
+      };
+      console.log(min(1, 2, 3, 4, 5, 6, -10)); //Почему при вводе нечислового значения выдает ошибку?
 
-            // Решение:
-            function min(){
-            //return numbers.map(value =>... ) Есть ли решение через map?
-            //let numbers2 = []
-            //console.log(numbers);
-            //console.log(arguments);
-            //console.log(arguments[1])
-            let minimum = arguments[0];
-            //console.log(minimum)
-            for(let i = 0; i < arguments.length && typeof(arguments[i]) === "number"; i++){
-              if(arguments[i] < minimum){
-                minimum = arguments[i];
-              }
-            }
-            console.log(`Минимальное значение: ${minimum}`);
+      let min2 = (
+        ...numbers2 //Почему не используются фигурные скобки в отличие от 1-го варианта?
+      ) =>
+        numbers2.reduce(
+          (acc, num) =>
+            typeof (num !== "number")
+              ? acc
+              : //console.log(acc); Почему нельзя вывести в консоль acc?
+              acc === null || num < acc
+              ? num
+              : acc,
+          null
+        );
+      console.log(min2(1, 2, 3, 4, 5, 6, -15)); //Почему выдает null?
+
+      // 2. Расчет суммы чисел с помощью замыканий
+      // Напишите функцию summa, которая вызывается с помощью двойных круглых скобок: summa(a)(b) = a + b.
+      // Примеры:
+      // summa(10)(5) // Возвращает 15
+      // summa(8)(-5) // Возвращает 3
+
+      // Решение:
+      function summa(a) {
+        return function (b) {
+          return a + b;
+        };
       }
-min(1, 2, 3, 4, 5, 6, -10);
+      console.log(summa(5)(6));
 
-            // 3. Получить строковый идентификатор (строку заданной длины) из случайных символов.
-            // 3.1. Создайте функцию createId(), которая генерирует строковый
-            // идентификатор (заданной длины) из случайных символов.
-            // Список символов передайте в качестве второго необязательного аргумента.
-            // Пример списка символов: "abcdefghijklmnopqrstuvwxyz0123456789"
-            // 3.2. *Получить в цикле 1000 уникальных идентификаторов, обязательно проверить, что все они уникальны.
-            // 3.3. *Передать дополнительно в createId() две стрелочных функции.
-            // При генерации каждого идентификатора, если создан
-            // уникальный идентификатор (который не повторяется), вызвать функцию №1, если повторяется, вызвать функцию №2.
-            // Если вызывается функция №2 (когда идентификатор повторяется),
-            // необходимо пересоздать идентификатор с помощью рекурсии.
-            // Если закончился словарь и не может быть создан новый идентификатор, прервать рекурсию и выйти из функции.
+      // 3. Получить строковый идентификатор (строку заданной длины) из случайных символов.
+      // 3.1. Создайте функцию createId(), которая генерирует строковый
+      // идентификатор (заданной длины) из случайных символов.
+      // Список символов передайте в качестве второго необязательного аргумента.
+      // Пример списка символов: "abcdefghijklmnopqrstuvwxyz0123456789"
+      // 3.2. *Получить в цикле 1000 уникальных идентификаторов, обязательно проверить,
+      // что все они уникальны.
+      // 3.3. *Передать дополнительно в createId() две стрелочных функции.
+      // При генерации каждого идентификатора, если создан
+      // уникальный идентификатор (который не повторяется), вызвать функцию №1, если
+      // повторяется, вызвать функцию №2.
+      // Если вызывается функция №2 (когда идентификатор повторяется),
+      // необходимо пересоздать идентификатор с помощью рекурсии.
+      // Если закончился словарь и не может быть создан новый идентификатор, прервать
+      // рекурсию и выйти из функции.
 
+      // Решение:
+      //3.1
+      function createId(long) {
+        let symbols = "abcdefghijklmnopqrstuvwxyz0123456789";
+        let newID = "";
+        if (arguments[1] != null) {
+          symbols = arguments[1];
+        }
+        for (i = 0; i < long; i++) {
+          position = Math.floor(Math.random() * symbols.length);
+          newID += symbols.substring(position, position + 1);
+        }
+        return newID;
+      }
+      console.log(createId(10, "abc"));
+      console.log(createId(10));
+      console.log(createId(3));
+//3.2
+      function createId1000(long) {
+        let symArr = [];
+        let symbols = "abcdefghijklmnopqrstuvwxyz0123456789";
+        let newID = "";
+        for (j = 0; j < 1000; j++) {
+          for (i = 0; i < long; i++) {
+            position = Math.floor(Math.random() * symbols.length);
+            newID += symbols.substring(position, position + 1);
+          }
+          if (symArr.includes(newID)) {
+            j--;
+            return;
+          }
+          else {
+          symArr.push(newID);
+          //console.log(newID);
+          newID = "";
+        }
+        }
+        return symArr;
+      }
+      console.log(createId1000(10));
 
-            // Решение:
-            function createId(long) {
-              // ваш код
-            }
-            console.log(createId(10, "abc")); //abccbaabcc
-            console.log(createId(10)); //fhjd53gv8z
-            console.log(createId(3)); //5t1
+      //Вариант с использованием уже написанной функции (почему-то нерабочий)
+      let symArr2 = [];
+      for (j = 0; j < 1000; j++) {
+      createId(5)// Почему функция не возвращает newID?
+          if (symArr2.includes(newID)) {
+           createId(5);
+          }
+          else {
+          symArr2.push(newID);
+          console.log(newID);
+          newID = "";
+        }
+      }
+        console.log(symArr);
+
+      //3.3
+      
+      let symArr = [];
+      for (j = 0; j < 1000; j++) {
+      createId(5)// Почему функция не возвращает newID?
+          if (symArr.includes(newID)) {
+            createId(5);
+          }
+          else {
+          let func1 = symArr => symArr.push(newID);// Почему функция не возвращает массив?
+          console.log(newID);
+          newID = "";
+        }
+      }
+        console.log(symArr);
+
     </script>
   </head>
   <body></body>
