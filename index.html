@@ -23,22 +23,21 @@
         );
         console.log(`"Минимальное значение: " (min)`);
       };
-      console.log(min(1, 2, 3, 4, 5, 6, -10)); //Почему при вводе нечислового значения выдает ошибку?
+      console.log(min(1, 2, 3, 4, 5, 6, -10, "b"));
 
       let min2 = (
-        ...numbers2 //Почему не используются фигурные скобки в отличие от 1-го варианта?
+        ...numbers2
       ) =>
         numbers2.reduce(
           (acc, num) =>
             typeof (num !== "number")
               ? acc
-              : //console.log(acc); Почему нельзя вывести в консоль acc?
-              acc === null || num < acc
+              : acc === null || num < acc
               ? num
               : acc,
           null
         );
-      console.log(min2(1, 2, 3, 4, 5, 6, -15)); //Почему выдает null?
+      console.log(min2(1, 2, 3, 4, 5, 6, -15));
 
       // 2. Расчет суммы чисел с помощью замыканий
       // Напишите функцию summa, которая вызывается с помощью двойных круглых скобок: summa(a)(b) = a + b.
@@ -72,76 +71,68 @@
 
       // Решение:
       //3.1
-      function createId(long) {
-        let symbols = "abcdefghijklmnopqrstuvwxyz0123456789";
+      function createId(long, customSymbols) {
+        const defaultSymbols = "abcdefghijklmnopqrstuvwxyz0123456789";
+        const symbols = customSymbols || defaultSymbols;
         let newID = "";
-        if (arguments[1] != null) {
-          symbols = arguments[1];
-        }
         for (i = 0; i < long; i++) {
-          position = Math.floor(Math.random() * symbols.length);
-          newID += symbols.substring(position, position + 1);
+          const position = Math.floor(Math.random() * symbols.length);
+          newID += symbols.charAt(position);
         }
         return newID;
       }
       console.log(createId(10, "abc"));
       console.log(createId(10));
       console.log(createId(3));
-//3.2
-      function createId1000(long) {
-        let symArr = [];
-        let symbols = "abcdefghijklmnopqrstuvwxyz0123456789";
-        let newID = "";
-        for (j = 0; j < 1000; j++) {
-          for (i = 0; i < long; i++) {
-            position = Math.floor(Math.random() * symbols.length);
-            newID += symbols.substring(position, position + 1);
-          }
-          if (symArr.includes(newID)) {
-            j--;
-            return;
-          }
-          else {
-          symArr.push(newID);
-          //console.log(newID);
-          newID = "";
-        }
-        }
-        return symArr;
-      }
-      console.log(createId1000(10));
-
-      //Вариант с использованием уже написанной функции (почему-то нерабочий)
+     
+      //3.2
       let symArr2 = [];
       for (j = 0; j < 1000; j++) {
-      createId(5)// Почему функция не возвращает newID?
-          if (symArr2.includes(newID)) {
-           createId(5);
-          }
-          else {
+        createId(3, "12");
+        let newID = createId(3, "12");
+        //console.log(newID)
+        if (symArr2.includes(newID)) {
+          createId(3, "12");
+        } else {
           symArr2.push(newID);
           console.log(newID);
           newID = "";
         }
       }
-        console.log(symArr);
+      console.log(symArr2);
 
       //3.3
-      
-      let symArr = [];
-      for (j = 0; j < 1000; j++) {
-      createId(5)// Почему функция не возвращает newID?
-          if (symArr.includes(newID)) {
-            createId(5);
+      function createId3(
+        long,
+        customSymbols,
+        onUnique = () => symArr.push(newID),
+        onRepeat = () => {for (i = 0; i < long; i++) {
+            const position = Math.floor(Math.random() * symbols.length);
+            newID += symbols.charAt(position)}}
+      ) {
+        let symArr = [];
+        const defaultSymbols = "abcdefghijklmnopqrstuvwxyz0123456789";
+        const symbols = customSymbols || defaultSymbols;
+        let newID = "";
+        while (symArr.length < 10) {
+          for (i = 0; i < long; i++) {
+            const position = Math.floor(Math.random() * symbols.length);
+            newID += symbols.charAt(position);
+            if (symArr.includes(newID)) {
+              if (symArr.length == symbols.length ** long) {
+                return;
+              } else {
+                onRepeat();
+              }
+              onUnique();
+              newID = "";
+            }
           }
-          else {
-          let func1 = symArr => symArr.push(newID);// Почему функция не возвращает массив?
-          console.log(newID);
-          newID = "";
         }
-      }
+        return symArr;
         console.log(symArr);
-
+      }
+      createId3(1);
     </script>
   </head>
   <body></body>
