@@ -25,9 +25,7 @@
       };
       console.log(min(1, 2, 3, 4, 5, 6, -10, "b"));
 
-      let min2 = (
-        ...numbers2
-      ) =>
+      let min2 = (...numbers2) =>
         numbers2.reduce(
           (acc, num) =>
             typeof (num !== "number")
@@ -84,7 +82,7 @@
       console.log(createId(10, "abc"));
       console.log(createId(10));
       console.log(createId(3));
-     
+
       //3.2
       let symArr2 = [];
       for (j = 0; j < 1000; j++) {
@@ -105,34 +103,37 @@
       function createId3(
         long,
         customSymbols,
-        onUnique = () => symArr.push(newID),
-        onRepeat = () => {for (i = 0; i < long; i++) {
-            const position = Math.floor(Math.random() * symbols.length);
-            newID += symbols.charAt(position)}}
+        onUnique = (id) => {},
+        onRepeat = (id) => {}
       ) {
         let symArr = [];
-        const defaultSymbols = "abcdefghijklmnopqrstuvwxyz0123456789";
-        const symbols = customSymbols || defaultSymbols;
-        let newID = "";
-        while (symArr.length < 10) {
-          for (i = 0; i < long; i++) {
-            const position = Math.floor(Math.random() * symbols.length);
-            newID += symbols.charAt(position);
-            if (symArr.includes(newID)) {
-              if (symArr.length == symbols.length ** long) {
-                return;
-              } else {
-                onRepeat();
-              }
-              onUnique();
-              newID = "";
-            }
+        do {
+          const id = createId(long, customSymbols);
+          console.log(id);
+          if (symArr.includes(id)) {
+          onRepeat(id)          
           }
+          else {
+          symArr.push(id);
+          onUnique(id);
         }
+       /* if (symbols.length ** long == symArr.length) { //Как определить, что словарь исчерпан без того, чтобы переносить сюда код функции createID? Ведь symbols.length здесь не читается.
+            return
+          }*/
+        } while (symArr.length < 3);//В данном случае do while считается рекурсией?
         return symArr;
-        console.log(symArr);
       }
-      createId3(1);
+      const ids = createId3(
+        1,
+        null,
+        (id) => {
+          console.log(`Уникальный идентификатор ${id}`);
+        },
+        (id) => {
+          console.log(`Неуникальный идентификатор ${id}`);
+        }
+      );
+      console.log(ids)
     </script>
   </head>
   <body></body>
