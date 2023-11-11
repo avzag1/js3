@@ -100,7 +100,7 @@
       console.log(symArr2);
 
       //3.3
-      function createId3(
+      /*function createId3(
         long,
         customSymbols,
         onUnique = (id) => {},
@@ -117,10 +117,10 @@
           symArr.push(id);
           onUnique(id);
         }
-       /* if (symbols.length ** long == symArr.length) { //Как определить, что словарь исчерпан без того, чтобы переносить сюда код функции createID? Ведь symbols.length здесь не читается.
-            return
-          }*/
-        } while (symArr.length < 3);//В данном случае do while считается рекурсией?
+       // if (symbols.length ** long == symArr.length) { //Как определить, что словарь исчерпан без того, чтобы переносить сюда код функции createID? Ведь symbols.length здесь не читается.
+        //    return
+       //  }
+        } while (symArr.length < 3);
         return symArr;
       }
       const ids = createId3(
@@ -133,7 +133,42 @@
           console.log(`Неуникальный идентификатор ${id}`);
         }
       );
-      console.log(ids)
+      console.log(ids)*/
+      let symArr = [];
+      function createId3(
+        long,
+        customSymbols,
+        onUnique = (id) => {},
+        onRepeat = (id) => {}
+      ) {
+        const id = createId(long, customSymbols);
+        console.log(id);
+        if (symArr.length >= 3) { 
+          return symArr;
+        } else {
+          if (symArr.includes(id)) {
+            onRepeat(id);
+          } else {
+            symArr.push(id);
+            onUnique(id);
+          }
+          return createId3(long, customSymbols, onUnique = (id) => {},
+        onRepeat = (id) => {});
+        }
+      }
+
+      const ids = createId3(
+        1,
+        null,
+        (id) => {
+          console.log(`Уникальный идентификатор ${id}`);
+        },
+        (id) => {
+          console.log(`Неуникальный идентификатор ${id}`);
+        },
+        3
+      );
+      console.log(ids);
     </script>
   </head>
   <body></body>
