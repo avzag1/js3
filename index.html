@@ -134,27 +134,34 @@
         }
       );
       console.log(ids)*/
-      let symArr = [];
+
       function createId3(
         long,
         customSymbols,
         onUnique = (id) => {},
-        onRepeat = (id) => {}
+        onRepeat = (id) => {},
+        symArr = [],
+        counterRepeat = 0
       ) {
-        const id = createId(long, customSymbols);
-        console.log(id);
-        if (symArr.length >= 3) { 
+        if (symArr.length >= 40 || counterRepeat >= 10) {
           return symArr;
-        } else {
-          if (symArr.includes(id)) {
-            onRepeat(id);
-          } else {
-            symArr.push(id);
-            onUnique(id);
-          }
-          return createId3(long, customSymbols, onUnique = (id) => {},
-        onRepeat = (id) => {});
         }
+        const id = createId(long, customSymbols);
+        if (symArr.includes(id)) {
+          onRepeat(id);
+          counterRepeat++;
+        } else {
+          symArr.push(id);
+          onUnique(id);
+        }
+        return createId3(
+          long,
+          customSymbols,
+          onUnique,
+          onRepeat,
+          symArr,
+          counterRepeat
+        );
       }
 
       const ids = createId3(
@@ -165,8 +172,7 @@
         },
         (id) => {
           console.log(`Неуникальный идентификатор ${id}`);
-        },
-        3
+        }
       );
       console.log(ids);
     </script>
